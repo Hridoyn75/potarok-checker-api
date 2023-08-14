@@ -7,7 +7,8 @@ import jwt from "jsonwebtoken";
 export const Login = (req, res)=>{
     // CHECK IF USER REGISTERED OR NOT
     const { email } = req.body;
-    res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+    const clientDomain = req.headers.origin;
+    res.header('Access-Control-Allow-Origin', clientDomain);
     res.header('Access-Control-Allow-Credentials', 'true'); // Allow credentials
 
     const q = "SELECT * FROM users WHERE ? = email";
@@ -27,7 +28,9 @@ export const Login = (req, res)=>{
 
         res.cookie("jwt",token, {
             httpOnly: true,
-            maxAge: 2592000000
+            maxAge: 2592000000,
+            sameSite: 'none', 
+            secure: true,
         })
         return res.json({message: "Logged in successfully", data: others });
     });

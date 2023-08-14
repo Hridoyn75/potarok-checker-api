@@ -13,7 +13,9 @@ const port = 5000;
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: ['http://localhost:3000',
+             "https://potarok-checker.vercel.app"
+            ],
     credentials: true, // Allow credentials (cookies)
   }));
 
