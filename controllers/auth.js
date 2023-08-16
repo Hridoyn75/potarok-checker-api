@@ -7,8 +7,7 @@ import jwt from "jsonwebtoken";
 export const Login = (req, res)=>{
     // CHECK IF USER REGISTERED OR NOT
     const { email } = req.body;
-    const clientDomain = req.headers.origin;
-    res.header('Access-Control-Allow-Origin', clientDomain);
+    res.header('Access-Control-Allow-Origin', process.env.FRONTEND_URL);
     res.header('Access-Control-Allow-Credentials', 'true'); // Allow credentials
 
     const q = "SELECT * FROM users WHERE ? = email";
@@ -27,7 +26,7 @@ export const Login = (req, res)=>{
         
         const { password, ...others} = result[0];
 
-        const token = jwt.sign({"id": others.id}, "secretKey", { expiresIn: '30d' });
+        const token = jwt.sign({"id": others.id}, process.env.SECRET_KEY, { expiresIn: '30d' });
 
         res.cookie("jwt",token, {
             httpOnly: true,
@@ -38,12 +37,7 @@ export const Login = (req, res)=>{
         return res.json({message: "Logged in successfully", data: others });
     });
 
-    
-
-    // GENERATE JWT TOKEN AND SEND AS COOKIE
-
-
-    // SEND USER DETAILS RESPONSE WITHOUT PASSWORD
+   
 }
 
 export const Signup = (req, res)=>{

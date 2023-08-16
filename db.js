@@ -1,11 +1,14 @@
 import mysql from "mysql2";
+import dotenv from 'dotenv';
+dotenv.config(); // Load variables from .env into process.env
+
 
 const db = mysql.createConnection({
-    host: "hriwantdb01-hriwantdb.aivencloud.com",
-    user: "avnadmin",
-    port : 28542,
-    password: "AVNS_alwbOypNs_tkEt5OV-W",
-    database: "potarok_checker_db"
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    port : process.env.DB_PORT,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE
 })
 db.connect((err) => {
     if (err) {

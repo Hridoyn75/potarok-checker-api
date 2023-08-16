@@ -9,9 +9,9 @@ export const ConfigureGitHubStrategy = ()=>{
 
 // Configure Google OAuth strategy
 passport.use(new GitHubStrategy({
-    clientID: '362b5a49c35086b99ba9',
-    clientSecret: 'f2cb98f75a9015fbf46e15b213ad904aaba5df4b',
-    callbackURL: 'http://localhost:5000/auth/github/callback'
+    clientID: process.env.GITHUB_CLIENT_ID,
+    clientSecret: process.env.GITHUB_CLIENT_SECRET,
+    callbackURL: '/auth/github/callback'
   }, (accessToken, refreshToken, profile, done) => {
 
     const email = profile.emails[0].value;
@@ -63,7 +63,7 @@ passport.use(new GitHubStrategy({
 export const FinalCallGitHub =   (req, res) => {
     const {password, ...others} = req.user;
 
-    const token = jwt.sign({"id": others.id}, "secretKey", { expiresIn: '30d' });
+    const token = jwt.sign({"id": others.id}, process.env.SECRET_KEY, { expiresIn: '30d' });
     res.cookie("jwt",token, {
         httpOnly: true,
         maxAge: 2592000000,
@@ -73,5 +73,5 @@ export const FinalCallGitHub =   (req, res) => {
 
     const userString = JSON.stringify(others);
 
-    res.redirect(`http://localhost:3000/auth/login-success?code=${userString}`);
+    res.redirect(`${process.env.FRONTEND_URL}/auth/login-success?code=${userString}`);
   }
