@@ -2,7 +2,6 @@ import express from 'express';
 import authRoutes from './routes/auth.js';
 import reportRoutes from './routes/report.js';
 import cookieParser from 'cookie-parser';
-import { AuthenticatedUser } from './middlewares/auth.js';
 import cors from 'cors';
 
 const app = express();
@@ -25,6 +24,11 @@ app.get("/", (req, res) => {
 })
 app.use("/", authRoutes)
 app.use("/report", reportRoutes)
+
+
+
+
+
 
 app.listen(port, () => {
     console.log(`Server is listening at http://localhost:${port}`);

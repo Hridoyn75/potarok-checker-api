@@ -18,8 +18,11 @@ export const Login = (req, res)=>{
 
         if(result.length === 0) return res.status(404).json({ error:"User not found"})
         
+        // IF PASSWORD IS NULL THEN SHOW THIS ERROR
+        if(!result[0].password) return res.status(400).json({ error:"You have a Account. But you need to use 'Login with Google' to access your account."})
+        
         // CHECK PASSWORD
-        const correctPassword =bcrypt.compareSync(req.body.password, result[0].password)
+        const correctPassword = bcrypt.compareSync(req.body.password, result[0].password)
         if(!correctPassword) return res.status(401).json({ error: "Invalid Password!" });
         
         const { password, ...others} = result[0];
@@ -44,7 +47,7 @@ export const Login = (req, res)=>{
 }
 
 export const Signup = (req, res)=>{
-    const { name,username, email, password} = req.body;
+    const { name,username, email, password, bio="New User"} = req.body;
     // CHECK IF USER OR EMAIL ALREADY EXISTS
     const q = "SELECT * FROM users where email= ? or username= ?";
     db.query(q, [email, username], (err, data) => {
@@ -57,8 +60,8 @@ export const Signup = (req, res)=>{
             var hash = bcrypt.hashSync(password, salt);
             
             // REGISTER THE USER ON DATABASE
-            const q = 'INSERT INTO users (name,username, email, password) VALUES(?)';
-            const values = [name,username, email, hash];
+            const q = 'INSERT INTO users (name,username, email, password, bio) VALUES(?)';
+            const values = [name,username, email, hash, bio];
 
             db.query(q, [values], (err, result) => {
                 if(err) return res.json(err);
