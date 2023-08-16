@@ -37,13 +37,15 @@ export const GetUserReports= (req, res) =>{
 // GET SINGLE REPORT
 export const GetSingleReport = (req, res) =>{
     const reportID = req.params.id;
-    const q = `SELECT * FROM reports WHERE id = ? `;
+    const q = `SELECT reports.*, users.name, users.username, users.photo
+     FROM reports JOIN users ON userID = users.id WHERE reports.id = ? `;
     db.query(q, [reportID, reportID], (err, report)=>{
         if (err) return res.status(400).json(err);
         if(report.length === 0) return res.status(404).
         json({error: "This report is not Available"});
 
-        const q2 = `SELECT * FROM comments 
+        const q2 = `SELECT comments.*, users.username, users.photo, users.name
+         FROM comments 
         JOIN users ON creatorID = users.id WHERE parent = ?
         ORDER BY comments.id DESC`
         db.query(q2, [reportID], (err, comments) => {
